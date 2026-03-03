@@ -68,8 +68,21 @@ raw_recons.notch_filter(freqs=50)
 #提取events
 events = mne.events_from_annotations(raw_recons)
 events
+event_dic = {'pos' : events[1]['20'],'neg':events[1]['22']}
+reject_criteria = dict(eeg=100e-6)
+epochs = mne.Epochs(raw_recons, events[0], event_id=event_dic, preload=True, tmax=1, tmin=-0.2, reject=reject_criteria)
+epochs.plot(events=events[0],block=True,title='请选出删除坏Epochs'）
+plt.show()
 
-event_dic = {'pos' : events[1]['20']
+#分出两个conditions
+epoch_pos = epochs('pos')
+epoch_neg = epochs('neg')
+pos_evoked = epoch_pos.averag()
+neg_evoked = epoch_neg.average()
+pos_evoked.plot()
+neg_evoked.plot()
+
+mne.viz.plot_compare_evokeds(postive=pos_evoked, negtive=neg_evoked, combine='mean', picks=np.arange(32), invert_y=True, legend=True, ci=True
 """
 案例：
 # 获取10-20秒内的良好的MEG数据
