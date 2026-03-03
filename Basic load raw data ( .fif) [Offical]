@@ -3,6 +3,7 @@
 import mne
 from mne.datasets import sample
 import matplotlib.pyplot as plt
+%matplotlib qt
 
 # download the raw data from MNE offical database/ input the data from the local computer
 # data formate: .fif (*raw data or preprocessing data)
@@ -17,7 +18,9 @@ raw = mne.io.read_raw_fif(sample_data_raw_file)
 print(raw)
 print(raw.info)
 raw.compute_psd(fmax=50).plot(picks="data", exclude="bads", amplitude=False)
-raw.plot(duration=5, n_channels=30)
+raw.plot(star=20, duration=5, n_channels=30)
+raw.set_channel_types({'VEOG'='eog'})
+raw.pick=(picks='all', exclude=['HEOG','trigger']
 
 import os
 
