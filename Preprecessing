@@ -3,6 +3,7 @@
 import mne
 from mne.datasets import sample
 import matplotlib.pyplot as plt
+%matplotlib qt
 
 # sample的存放地址
 data_path = sample.data_path()
@@ -18,7 +19,57 @@ raw = mne.io.read_raw_fif(fname)
 #查看原始数据信息
 raw.info
 
+#复制原始数据文件，在复制后的数据上进行操作
+raw_cropped = raw.copy()
+raw_cropped.crop(tmin = start_t/1000, tmax = end_t/1000)
+raw_cropped.plt(start = 20, duration = 1)
+plt.show()
 
+#定位电极
+raw_cropped.set_montage('standard_1020',on_missing = 'warn')
+
+#差值坏导
+raw_cropped.load_data()
+raw_cropped.interpolate_bads()
+raw_cropped.plt(start=20, duration=1,n_channels=33,block=Ture,title='差值坏导完成，如无错误请关闭窗口')
+plt.show()
+
+#重参考
+raw_ref = raw_cropped.copy()
+raw_ref.load_data()
+raw_ref.set_eeg_reference(ref_channels=['M1','M2'])
+raw_ref.plot(start=20,duration=1,block=True,title='重参考完成，无误请关闭窗口')
+plt.show()
+
+#滤波
+raw_filter=raw_cropped.copy()
+raw_filter.filter(l_freq=0.4,h_freq=None)
+raw_filter.notch_filter(freqs=50)
+raw_filter.plot_psd(fmax=60)
+
+#ICA
+ica = mne.preprocessing,ICA(n_components=10,method='picard',max_iter=800)
+ica.fit(raw_filter)
+rwaw_filter.load_data()
+ica.plot_sources(raw_filter,show_scorllbars=True,block=Ture,title='请选择需要去除的成分')
+plt.show()
+print(ica)
+
+raw_recons = raw_filter.copy()
+raw_recons = ica.apply(raw_recons)
+raw_filter.plot(start=20,duration=1,n_channels=33,title='Ica处理前，确认后可关闭')
+raw_recons.plot(start=20,duration=1,n_channels=33,title='Ica处理后，确认后可关闭')
+plt.show(block=True)
+
+#高通滤波和凹陷滤波
+raw_recons.filter(l_freq=None,h_freq=40)
+raw_recons.notch_filter(freqs=50)
+
+#提取events
+events = mne.events_from_annotations(raw_recons)
+events
+
+event_dic = {'pos' : events[1]['20']
 """
 案例：
 # 获取10-20秒内的良好的MEG数据
