@@ -13,6 +13,8 @@ sample_data_raw_file = (
     fname / "MEG" / "sample" / "sample_audvis_filt-0-40_raw.fif"
 )
 raw = mne.io.read_raw_fif(sample_data_raw_file)
+# 导入eeg格式的数据(本地文件）
+#raw = mne.io.read_raw_eeglab(data/eeg/f0006.set)
 
 # plot the raw data and control the psd
 print(raw)
@@ -21,9 +23,9 @@ raw.compute_psd(fmax=50).plot(picks="data", exclude="bads", amplitude=False)
 raw.plot(star=20, duration=5, n_channels=30)
 raw.set_channel_types({'VEOG'='eog'})
 raw.pick=(picks='all', exclude=['HEOG','trigger']
+plt.show()
 
 import os
-
 from mne.preprocessing import ICA, corrmap, create_ecg_epochs, create_eog_epochs
 
 # preprocessing
