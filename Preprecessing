@@ -17,3 +17,125 @@ raw = mne.io.read_raw_fif(fname)
 
 #查看原始数据信息
 raw.info
+
+
+"""
+案例：
+# 获取10-20秒内的良好的MEG数据
+# 根据type来选择 那些良好的MEG信号(良好的MEG信号，通过设置exclude="bads") channel,
+结果为 channels所对应的的索引
+
+# picks:是根据条件挑选出来的索引；
+# time_slice:时间切片
+
+# 通常raw的数据访问方式如下：
+data, times = raw[picks, time_slice]
+
+# 想要获取raw中所有数据，以下两种方式均可：
+data,times=raw[:]
+data,times=raw[:,:]
+
+picks = mne.pick_types(raw.info, meg=True, exclude='bads')
+t_idx = raw.time_as_index([10., 20.])
+data, times = raw[picks, t_idx[0]:t_idx[1]]
+plt.plot(times,data.T)
+plt.title("Sample channels")
+
+
+
+"""
+sfreq：采样频率
+
+raw返回所选信道以及时间段内的数据和时间点，
+分别赋值给data以及times（即raw对象返回的是两个array）
+"""
+sfreq=raw.info['sfreq']
+data,times=raw[:5,int(sfreq*1):int(sfreq*3)]
+plt.plot(times,data.T)
+plt.title("Sample channels")
+
+
+
+"""
+绘制各通道的功率谱密度
+"""
+raw.plot_psd()
+plt.show()
+
+
+
+"""
+绘制SSP矢量图
+"""
+raw.plot_projs_topomap()
+plt.show()
+
+
+
+"""
+绘制通道频谱图作为topography
+"""
+raw.plot_psd_topo()
+plt.show()
+
+
+
+"""
+绘制电极位置
+"""
+raw.plot_sensors()
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
