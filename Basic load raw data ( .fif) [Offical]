@@ -13,10 +13,12 @@ sample_data_raw_file = (
     fname / "MEG" / "sample" / "sample_audvis_filt-0-40_raw.fif"
 )
 raw = mne.io.read_raw_fif(sample_data_raw_file)
+
 # 导入eeg格式的数据(本地文件）
+#for data in ['f005.set','f007.set','f008.set']
 #raw = mne.io.read_raw_eeglab(data/eeg/f0006.set)
 
-# plot the raw data and control the psd
+# plot the raw data and control the psd(导入数据并提出无用的channels)
 print(raw)
 print(raw.info)
 raw.compute_psd(fmax=50).plot(picks="data", exclude="bads", amplitude=False)
