@@ -48,11 +48,12 @@ raw_filter.notch_filter(freqs=50)
 raw_filter.plot_psd(fmax=60)
 
 #ICA
-ica = mne.preprocessing,ICA(n_components=10,method='picard',max_iter=800)
+ica = mne.preprocessing.ICA(n_components=10,method='picard',max_iter=800)
 ica.fit(raw_filter)
 rwaw_filter.load_data()
+ica.plot_components()
 ica.plot_sources(raw_filter,show_scorllbars=True,block=Ture,title='请选择需要去除的成分')
-plt.show()
+plt.show(block=True)
 print(ica)
 
 raw_recons = raw_filter.copy()
