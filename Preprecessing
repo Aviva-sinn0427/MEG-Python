@@ -33,6 +33,21 @@ raw_cropped.load_data()
 raw_cropped.interpolate_bads()
 raw_cropped.plt(start=20, duration=1,n_channels=33,block=Ture,title='差值坏导完成，如无错误请关闭窗口')
 plt.show()
+badflag = False
+if raw_cropped.info['bads']:
+print('已选择坏导:',raw_cropped.info['bads'],'开始进行插值')
+badflag = True
+else:
+print('无坏导，跳过插值')
+if badflag:
+raw_cropped.laod_data()
+raw_cropped.interpolate_bads(exclude=['F11','F12'])
+raw_cropped.plot(start=20,duration=1,n_channels=33,block=True,title='插值坏导完成，无误请关闭窗口')
+plt.show()
+
+
+
+
 
 #重参考
 raw_ref = raw_cropped.copy()
